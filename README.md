@@ -71,3 +71,42 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## 记录 prisma 命令
+
+#### npx prisma init
+
+初始化 prisma 的目录
+
+#### npx prisma migrate reset
+
+重置数据库，丢失所有数据。因为会重新 apply 所有的迁移文件，所以最好是删除所有迁移文件。
+因为有些迁移文件导致数据库执行报错了。
+但是有些迁移文件又不想要删除，因为可能已经有人为修改记录。比如增加了 updatedAt 默认值。
+
+#### npx prisma migrate status
+
+查看当前状态
+
+#### 回滚或者重新执行
+
+npx prisma migrate resolve --rolled-back "20211102100704_remove_comment"
+npx prisma migrate resolve --applied "20211102100704_remove_comment"
+
+#### npx prisma migrate dev
+
+npx prisma migrate dev --name remove_comment --create-only
+这个命令只创建，但是不执行 sql 脚本
+
+npx prisma migrate dev
+这个命令会直接执行 sql 脚本
+
+#### npx prisma migrate deploy
+
+#### npx prisma db pull
+
+从数据库更新 schema，但是似乎有限制，比如缺少表的情况下，是不能帮我们自动创建表的
+
+#### npx prisma db push
+
+从 schema 更新数据库，但是似乎有限制，比如缺少表的情况下，是不能帮我们自动创建表的
