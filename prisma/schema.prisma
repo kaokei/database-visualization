@@ -14,7 +14,7 @@ datasource db {
 model App {
     id           Int        @id @default(autoincrement())
     name         String     @unique
-    desc         String
+    desc         String     @default("") @db.VarChar(1024)
     databaseList Database[]
     createdAt    DateTime   @default(now())
     updatedAt    DateTime   @default(now())
@@ -24,7 +24,7 @@ model App {
 model Server {
     id           Int        @id @default(autoincrement())
     name         String     @unique
-    desc         String
+    desc         String     @default("") @db.VarChar(1024)
     host         String
     port         String
     username     String
@@ -50,6 +50,7 @@ model Database {
 model Table {
     id         Int       @id @default(autoincrement())
     name       String    @unique
+    comment    String    @default("") @db.VarChar(2048)
     database   Database? @relation(fields: [databaseId], references: [id])
     databaseId Int?
     fieldList  Field[]
@@ -59,14 +60,21 @@ model Table {
 
 // 字段
 model Field {
-    id             Int             @id @default(autoincrement())
-    name           String          @unique
-    table          Table?          @relation(fields: [tableId], references: [id])
-    tableId        Int?
-    startFieldList FieldRelation[] @relation("start")
-    endFieldList   FieldRelation[] @relation("end")
-    createdAt      DateTime        @default(now())
-    updatedAt      DateTime        @default(now())
+    id                       Int             @id @default(autoincrement())
+    name                     String          @unique
+    comment                  String          @default("") @db.VarChar(1024)
+    extra                    String          @default("") @db.VarChar(30)
+    data_type                String          @default("") @db.VarChar(64)
+    column_key               String          @default("") @db.VarChar(3)
+    is_nullable              String          @default("") @db.VarChar(3)
+    column_default           String?         @db.LongText
+    character_maximum_length Int?
+    table                    Table?          @relation(fields: [tableId], references: [id])
+    tableId                  Int?
+    startFieldList           FieldRelation[] @relation("start")
+    endFieldList             FieldRelation[] @relation("end")
+    createdAt                DateTime        @default(now())
+    updatedAt                DateTime        @default(now())
 }
 
 // 字段间关系
