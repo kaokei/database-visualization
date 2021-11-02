@@ -10,9 +10,21 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// 应用
+model App {
+    id           Int        @id @default(autoincrement())
+    name         String     @unique
+    desc         String
+    databaseList Database[]
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @default(now())
+}
+
+// 服务器
 model Server {
     id           Int        @id @default(autoincrement())
     name         String     @unique
+    desc         String
     host         String
     port         String
     username     String
@@ -22,16 +34,19 @@ model Server {
     updatedAt    DateTime   @default(now())
 }
 
+// 数据库
 model Database {
     id        Int      @id @default(autoincrement())
     name      String   @unique
     server    Server?  @relation(fields: [serverId], references: [id])
     serverId  Int?
+    appList   App[]
     tableList Table[]
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now())
 }
 
+// 表
 model Table {
     id         Int       @id @default(autoincrement())
     name       String    @unique
@@ -42,6 +57,7 @@ model Table {
     updatedAt  DateTime  @default(now())
 }
 
+// 字段
 model Field {
     id             Int             @id @default(autoincrement())
     name           String          @unique
@@ -53,6 +69,7 @@ model Field {
     updatedAt      DateTime        @default(now())
 }
 
+// 字段间关系
 model FieldRelation {
     startFieldId Int
     startField   Field    @relation("start", fields: [startFieldId], references: [id])

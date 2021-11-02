@@ -1,23 +1,20 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE `App` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `desc` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-  - You are about to drop the `Post` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE `Post` DROP FOREIGN KEY `Post_authorId_fkey`;
-
--- DropTable
-DROP TABLE `Post`;
-
--- DropTable
-DROP TABLE `User`;
+    UNIQUE INDEX `App_name_key`(`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Server` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
+    `desc` VARCHAR(191) NOT NULL,
     `host` VARCHAR(191) NOT NULL,
     `port` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
@@ -76,6 +73,15 @@ CREATE TABLE `FieldRelation` (
     PRIMARY KEY (`startFieldId`, `endFieldId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `_AppToDatabase` (
+    `A` INTEGER NOT NULL,
+    `B` INTEGER NOT NULL,
+
+    UNIQUE INDEX `_AppToDatabase_AB_unique`(`A`, `B`),
+    INDEX `_AppToDatabase_B_index`(`B`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Database` ADD CONSTRAINT `Database_serverId_fkey` FOREIGN KEY (`serverId`) REFERENCES `Server`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -90,3 +96,9 @@ ALTER TABLE `FieldRelation` ADD CONSTRAINT `FieldRelation_startFieldId_fkey` FOR
 
 -- AddForeignKey
 ALTER TABLE `FieldRelation` ADD CONSTRAINT `FieldRelation_endFieldId_fkey` FOREIGN KEY (`endFieldId`) REFERENCES `Field`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_AppToDatabase` ADD FOREIGN KEY (`A`) REFERENCES `App`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_AppToDatabase` ADD FOREIGN KEY (`B`) REFERENCES `Database`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
